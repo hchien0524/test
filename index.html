@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量化因子防護網 - 每日選股清單</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        .up { color: red; }
+        .down { color: green; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ 法人級量化防護網 - 基礎流動性過濾</h1>
+    <p>更新時間：<span id="update-time">載入中...</span></p>
+    <table id="stock-table">
+        <thead>
+            <tr>
+                <th>代號</th>
+                <th>名稱</th>
+                <th>成交量(張)</th>
+                <th>收盤價</th>
+                <th>漲跌</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('update-time').innerText = data.update_time;
+                const tbody = document.querySelector('#stock-table tbody');
+                data.stocks.forEach(stock => {
+                    const row = `<tr>
+                        <td>${stock['代號']}</td>
+                        <td>${stock['名稱']}</td>
+                        <td>${stock['成交量(張)'].toLocaleString()}</td>
+                        <td>${stock['收盤價']}</td>
+                        <td class="${stock['漲跌'] > 0 ? 'up' : (stock['漲跌'] < 0 ? 'down' : '')}">${stock['漲跌']}</td>
+                    </tr>`;
+                    tbody.innerHTML += row;
+                });
+            });
+    </script>
+</body>
+</html>
